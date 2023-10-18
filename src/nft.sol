@@ -46,8 +46,8 @@ contract NFT is ERC721URIStorage {
         return currentTokenURI;
     } 
 
-    function transfer(address from, address to, uint256 tokenId) internal {
-        _transfer(from, to, tokenId);
+    function transfer( address to, uint256 tokenId) public {
+        _transfer(msg.sender, to, tokenId);
     }
 
 
