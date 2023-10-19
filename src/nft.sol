@@ -4,7 +4,6 @@
 
 pragma solidity ^0.8.0;
 
-import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -50,7 +49,7 @@ contract NFT is ERC721URIStorage, AccessControl {
         return currentTokenURI;
     } 
 
-    function hashID(uint256 ID) public pure returns (string memory) {
+    function hashID(uint256 ID) private pure returns (string memory) {
         bytes32 cid = keccak256(abi.encodePacked(ID));
         string memory s = hextool.toHex(cid);
         return s;
