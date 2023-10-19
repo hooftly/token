@@ -6,10 +6,11 @@ pragma solidity ^0.8.0;
 
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {hextool} from "./hex.sol";
 
-contract NFT is ERC721URIStorage {
+contract NFT is ERC721URIStorage, AccessControl {
     
     uint256 private nextTokenId;
 
@@ -55,7 +56,9 @@ contract NFT is ERC721URIStorage {
         return s;
     }
 
-   
+   function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
     
 
 
