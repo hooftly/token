@@ -24,15 +24,17 @@ contract NFT is ERC721URIStorage, AccessControl {
     constructor(string memory tokenURI, uint256 initialCap) ERC721("NewNFT", "NFT") {
         currentTokenURI = tokenURI;
         cap = initialCap;
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function mintNFT() public returns (uint256) {
+        require(hasRole(_MINT, msg.sender), "You do not have the required role bruh");
         uint256 tokenId = nextTokenId++;
         _mint(msg.sender, tokenId);
         string memory newID = string.concat(currentTokenURI, hashID(tokenId));
         _setTokenURI(tokenId, newID);
         totalSupply = totalSupply + 1;
-        require(totalSupply <= cap,"There is a supply cap");
+        require(totalSupply <= cap,"There is a supply cap bruh");
         return tokenId;
     }
     
