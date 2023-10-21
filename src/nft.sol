@@ -57,6 +57,14 @@ contract NFT is ERC721URIStorage, AccessControl {
         return s;
     }
 
+    function userUpdateURI (uint256 tid) public returns (string memory) {
+        address owner = _ownerOf(tid);
+        require(msg.sender == owner, "You need to be the owner bruh");
+        string memory i = string.concat(currentTokenURI, hashID(tid));
+        _setTokenURI(tid, i);
+        return i;
+    }
+
    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
