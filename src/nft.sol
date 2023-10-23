@@ -52,11 +52,6 @@ contract NFT is ERC721URIStorage, AccessControl {
         return currentTokenURI;
     } 
 
-    function hashID(uint256 ID) private pure returns (string memory) {
-        bytes32 cid = keccak256(abi.encodePacked(ID));
-        string memory s = hextool.toHex(cid);
-        return s;
-    }
 
     function userUpdateURI (uint256 tid) public returns (string memory) {
         address owner = _ownerOf(tid);
