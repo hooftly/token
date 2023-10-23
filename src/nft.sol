@@ -20,6 +20,8 @@ contract NFT is ERC721URIStorage, AccessControl {
     string public currentTokenURI;
 
     bytes32 public constant _MINT = keccak256("_MINT");
+
+    bytes32 public constant _ADMIN = keccak256("_ADMIN");
     
 
     constructor(string memory tokenURI, uint256 initialCap) ERC721("NewNFT", "NFT") {
@@ -40,7 +42,7 @@ contract NFT is ERC721URIStorage, AccessControl {
     }
     
     function burnNFT(uint256 tokenId) public {
-        address owner = ownerOf(tokenId);
+        address owner = _ownerOf(tokenId);
         require(msg.sender == owner,"You don't own this NFT bruh");
         _burn(tokenId);
         totalSupply = --totalSupply;
@@ -48,6 +50,7 @@ contract NFT is ERC721URIStorage, AccessControl {
     }
 
     function setURI(string memory newURI) public returns (string memory) {
+        require(hasRole(_ADMIN, msg.sender), "You do not have the required role bruh");
         currentTokenURI = newURI;
         return currentTokenURI;
     } 
