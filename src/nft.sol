@@ -20,6 +20,7 @@ contract NFT is ERC721URIStorage, AccessControl {
     string public currentTokenURI;
 
     bytes32 public constant _MINT = keccak256("_MINT");
+    
 
     constructor(string memory tokenURI, uint256 initialCap) ERC721("NewNFT", "NFT") {
         currentTokenURI = tokenURI;
@@ -31,7 +32,7 @@ contract NFT is ERC721URIStorage, AccessControl {
         require(hasRole(_MINT, msg.sender), "You do not have the required role bruh");
         uint256 tokenId = nextTokenId++;
         _mint(msg.sender, tokenId);
-        string memory newID = string.concat(currentTokenURI, hashID(tokenId));
+        string memory newID = string.concat(currentTokenURI, hextool.toHex(hashUserAddress(tokenId)));
         _setTokenURI(tokenId, newID);
         totalSupply = totalSupply + 1;
         require(totalSupply <= cap,"There is a supply cap bruh");
@@ -51,18 +52,20 @@ contract NFT is ERC721URIStorage, AccessControl {
         return currentTokenURI;
     } 
 
-    function hashID(uint256 ID) private pure returns (string memory) {
-        bytes32 cid = keccak256(abi.encodePacked(ID));
-        string memory s = hextool.toHex(cid);
-        return s;
-    }
 
     function userUpdateURI (uint256 tid) public returns (string memory) {
         address owner = _ownerOf(tid);
         require(msg.sender == owner, "You need to be the owner bruh");
-        string memory i = string.concat(currentTokenURI, hashID(tid));
+        string memory i = string.concat(currentTokenURI, hextool.toHex(hashUserAddress(tid)));
         _setTokenURI(tid, i);
         return i;
+    }
+
+    function hashUserAddress (uint256 eid) public view returns (bytes32) {
+        address userAddress = address(msg.sender);
+        uint256 userEID = eid;
+        bytes32 hashedAddress = keccak256(abi.encodePacked(userAddress, userEID));
+        return hashedAddress;
     }
 
    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
