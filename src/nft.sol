@@ -31,9 +31,9 @@ contract NFT is ERC721URIStorage, AccessControl {
     function mintNFT() public returns (uint256) {
         require(hasRole(_MINT, msg.sender), "You do not have the required role bruh");
         uint256 tokenId = ++nextTokenId;
-        _mint(msg.sender, tokenId);
         string memory newID = string.concat(currentTokenURI, hextool.toHex(hashUserAddress(tokenId)));
         _setTokenURI(tokenId, newID);
+        _safeMint(msg.sender, tokenId);
         totalSupply = totalSupply + 1;
         require(totalSupply <= cap,"There is a supply cap bruh");
         return tokenId;
