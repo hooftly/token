@@ -30,10 +30,10 @@ contract NFT is ERC721URIStorage, AccessControl {
 
     function mintNFT() public returns (uint256) {
         require(hasRole(_MINT, msg.sender), "You do not have the required role bruh");
-        uint256 tokenId = nextTokenId++;
-        _mint(msg.sender, tokenId);
+        uint256 tokenId = ++nextTokenId;
         string memory newID = string.concat(currentTokenURI, hextool.toHex(hashUserAddress(tokenId)));
         _setTokenURI(tokenId, newID);
+        _safeMint(msg.sender, tokenId);
         totalSupply = totalSupply + 1;
         require(totalSupply <= cap,"There is a supply cap bruh");
         return tokenId;
@@ -43,7 +43,7 @@ contract NFT is ERC721URIStorage, AccessControl {
         address owner = ownerOf(tokenId);
         require(msg.sender == owner,"You don't own this NFT bruh");
         _burn(tokenId);
-        totalSupply = totalSupply - 1;
+        totalSupply = --totalSupply;
         
     }
 
@@ -52,6 +52,11 @@ contract NFT is ERC721URIStorage, AccessControl {
         return currentTokenURI;
     } 
 
+    function hashID(uint256 ID) private pure returns (string memory) {
+        bytes32 cid = keccak256(abi.encodePacked(ID));
+        string memory s = hextool.toHex(cid);
+        return s;
+    }
 
     function userUpdateURI (uint256 tid) public returns (string memory) {
         address owner = _ownerOf(tid);
@@ -68,7 +73,7 @@ contract NFT is ERC721URIStorage, AccessControl {
         return hashedAddress;
     }
 
-   function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721URIStorage, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
     
